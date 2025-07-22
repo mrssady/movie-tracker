@@ -1,15 +1,103 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int           @id @default(autoincrement())
+  name          String
+  email         String        @unique
+  password      String
+  avatarUrl     String?       @map("avatar_url")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  userMovies    UserMovie[]
+  customLists   CustomList[]
+  @@map ("users")
+}
+
+model Movie {
+  id            Int               @id @default(autoincrement())
+  title         String
+  description   String?
+  releaseDate   DateTime          @map("release_date")
+  posterUrl     String?           @map("poster_url")
+  trailerUrl    String?           @map("trailer_url")
+  createdAt     DateTime          @default(now()) @map("created_at")
+  movieGenres   MovieGenre[]
+  userMovies    UserMovie[]
+  customListMovies CustomListMovie[]
+
+  @@map ("movies")
+}
+
+model Genre {
+  id          Int           @id @default(autoincrement())
+  name        String
+  movieGenres MovieGenre[]
+
+  @@map ("genres")
+}
+
+model MovieGenre {
+  id        Int     @id @default(autoincrement())
+  movie     Movie   @relation(fields: [movieId], references: [id])
+  movieId   Int     @map("movie_id")
+  genre     Genre   @relation(fields: [genreId], references: [id])
+  genreId   Int     @map("genre_id")
+
+  @@map ("movie_genres")
+}
+
+model WatchStatus {
+  id          Int         @id @default(autoincrement())
+  name        String
+  userMovies  UserMovie[]
+
+  @@map ("watch_statuses")
+}
+
+model UserMovie {
+  id          Int         @id @default(autoincrement())
+  user        User        @relation(fields: [userId], references: [id])
+  userId      Int         @map("user_id")
+  movie       Movie       @relation(fields: [movieId], references: [id])
+  movieId     Int         @map("movie_id")
+  status      WatchStatus @relation(fields: [statusId], references: [id])
+  statusId    Int         @map("status_id")
+  rating      Int?
+  review      String?
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  @@map ("user_movies")
+}
+
+model CustomList {
+  id          Int               @id @default(autoincrement())
+  user        User              @relation(fields: [userId], references: [id])
+  userId      Int               @map("user_id")
+  name        String
+  description String?
+  createdAt   DateTime          @default(now()) @map("created_at")
+  movies      CustomListMovie[]
+
+  @@map ("custom_lists")
+}
+
+model CustomListMovie {
+  id          Int         @id @default(autoincrement())
+  list        CustomList  @relation(fields: [listId], references: [id])
+  listId      Int         @map("list_id")
+  movie       Movie       @relation(fields: [movieId], references: [id])
+  movieId     Int         @map("movie_id")
+
+  @@map ("custom_list_movies")
 }
