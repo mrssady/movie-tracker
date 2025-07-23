@@ -11,23 +11,41 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto) {
+    let user = await this.prisma.user.findUnique({
+      where: {phone: createUserDto.email },
+    });
+    if (user){
+      throw new BadRequestException ('This email is already taken');
+    }
+    return this.prisma.user.create({ data: createUserDto });
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    return this.prisma.user.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    return this.getUser(id);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    await this.getUser(id);
+    return this.prisma.user.update({where:{id},data:updateUserDto})
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    await this.getUser(id);
+    return this.prisma.user.delete({where :{id}});
   }
+
+  private async getUser(id:string){
+    const users = await this.prisma.user.findFrist({
+      where:{id},
+    });
+    if (!users){
+      throw new NotFoundException(`No user found with id ${id}`);
+  }
+  return users;
+}
 }
