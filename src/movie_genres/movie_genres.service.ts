@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import { CreateMovieGenreDto } from './dto/create-movie_genre.dto';
 import { UpdateMovieGenreDto } from './dto/update-movie_genre.dto';
 
+
 @Injectable()
 export class MovieGenreService {
   constructor(private readonly prisma: PrismaClient) {}

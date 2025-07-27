@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import { CreateCustomListMovieDto } from './dto/create-custom_list_movie.dto';
 import { UpdateCustomListMovieDto } from './dto/update-custom_list_movie.dto';
 
+
 @Injectable()
 export class CustomListMovieService {
   constructor(private readonly prisma: PrismaClient) {}

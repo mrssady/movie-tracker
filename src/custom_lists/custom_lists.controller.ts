@@ -9,47 +9,43 @@ import {
   Delete,
   Req,
 } from '@nestjs/common';
-import { CustomListService } from './custom-list.service';
-import { CreateCustomListDto } from './dto/create-custom-list.dto';
-import { UpdateCustomListDto } from './dto/update-custom-list.dto.ts';
-import { Request } from 'express';
-import { User } from '@prisma/client';
+import { CustomListService } from './custom_lists.service';
+import { CreateCustomListDto } from './dto/create-custom_list.dto';
+import { UpdateCustomListDto } from './dto/update-custom_list.dto';
+import { RequestWithUser } from '../common/interfaces/request-with-user';
 
-interface CustomListRequest extends Request {
-  payload: User;
-}
 
 @Controller('custom-lists')
 export class CustomListController {
   constructor(private readonly customListService: CustomListService) {}
 
   @Post()
-  create(@Body() createCustomListDto: CreateCustomListDto, @Req() req: CustomListRequest) {
-    createCustomListDto.userId = req.payload.id;
+  create(@Body() createCustomListDto: CreateCustomListDto, @Req() req: RequestWithUser) {
+    createCustomListDto.userId = req.user.id;
     return this.customListService.create(createCustomListDto);
   }
 
   @Get()
-  findAll(@Req() req: CustomListRequest) {
-    return this.customListService.findAll(req.payload.id);
+  findAll(@Req() req: RequestWithUser) {
+    return this.customListService.findAll(req.user.id);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @Req() req: CustomListRequest) {
-    return this.customListService.findOne(+id, req.payload.id);
+  findOne(@Param('id') id: string, @Req() req: RequestWithUser) {
+    return this.customListService.findOne(+id, req.user.id);
   }
 
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() updateCustomListDto: UpdateCustomListDto,
-    @Req() req: CustomListRequest,
+    @Req() req: RequestWithUser,
   ) {
-    return this.customListService.update(+id, updateCustomListDto, req.payload.id);
+    return this.customListService.update(+id, updateCustomListDto, req.user.id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @Req() req: CustomListRequest) {
-    return this.customListService.remove(+id, req.payload.id);
+  remove(@Param('id') id: string, @Req() req: RequestWithUser) {
+    return this.customListService.remove(+id, req.user.id); 
   }
 }

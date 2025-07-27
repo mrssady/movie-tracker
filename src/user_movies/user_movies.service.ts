@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { CreateUserMovieDto } from '../dto/create-user-movie.dto';
-import { UpdateUserMovieDto } from '../dto/update-user-movie.dto';
+import { CreateUserMovieDto } from './dto/create-user_movie.dto';
+import { UpdateUserMovieDto } from './dto/update-user_movie.dto';
+
 
 @Injectable()
 export class UserMovieService {

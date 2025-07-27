@@ -9,8 +9,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { CustomListMovieService } from './custom_list_movies.service';
-import { CreateCustomListMovieDto } from './dto/create-custom-list-movie.dto';
-import { UpdateCustomListMovieDto } from './dto/update-custom-list-movie.dto';
+import { CreateCustomListMovieDto } from './dto/create-custom_list_movie.dto';
+import { UpdateCustomListMovieDto } from './dto/update-custom_list_movie.dto';
 
 @Controller('custom-list-movies')
 export class CustomListMovieController {

@@ -1,8 +1,9 @@
 // custom-list.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { CreateCustomListDto } from './dto/create-custom-list.dto';
-import { UpdateCustomListDto } from './dto/update-custom-list.dto.ts';
+import { CreateCustomListDto } from './dto/create-custom_list.dto';
+import { UpdateCustomListDto } from './dto/update-custom_list.dto';
+
 
 @Injectable()
 export class CustomListService {

@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import { CreateWatchStatusDto } from './dto/create-watch_status.dto';
 import { UpdateWatchStatusDto } from './dto/update-watch_status.dto';
 
+
 @Injectable()
 export class WatchStatusService {
   constructor(private readonly prisma: PrismaClient) {}
