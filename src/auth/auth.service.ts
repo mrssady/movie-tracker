@@ -22,19 +22,21 @@ export class AuthService {
     });
     if (userExists) throw new ConflictException('Email already registered');
 
-    const hash = await bcrypt.hash(dto.password, 10);
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+
     const user = await this.prisma.user.create({
-      data: { ...dto, password: hash },
+      data: { ...dto, password: hashedPassword },
     });
 
-    delete user.password;
-    return user;
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 
   async login(dto: LoginAuthDto) {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
+
     if (!user || !(await bcrypt.compare(dto.password, user.password))) {
       throw new UnauthorizedException('Invalid credentials');
     }

@@ -12,15 +12,10 @@ import {
 import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Request } from 'express';
-import { User } from '@prisma/client';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard'; 
+import { RequestWithUser } from '../common/interfaces/request-with-user';
 
-
-interface UserRequest extends Request {
-  payload: User;
-}
 
 @Controller('users')
 export class UserController {
@@ -28,8 +23,8 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
 @Get()
-findAll(@Req() request: UserRequest) {
-  return this.userService.findAll(request.payload.id);
+findAll(@Req() request: RequestWithUser) {
+  return this.userService.findAll(request.user.id);
 }
 
   @Post()
@@ -38,17 +33,17 @@ findAll(@Req() request: UserRequest) {
   }
 
   @Get('me')
-  findMe(@Req() req: UserRequest) {
-    return this.userService.findOne(req.payload.id);
+  findMe(@Req() req: RequestWithUser) {
+    return this.userService.findOne(req.user.id);
   }
 
   @Patch('me')
-  update(@Body() updateUserDto: UpdateUserDto, @Req() req: UserRequest) {
-    return this.userService.update(req.payload.id, updateUserDto);
+  update(@Body() updateUserDto: UpdateUserDto, @Req() req: RequestWithUser) {
+    return this.userService.update(req.user.id, updateUserDto);
   }
 
   @Delete('me')
-  remove(@Req() req: UserRequest) {
-    return this.userService.remove(req.payload.id);
+  remove(@Req() req: RequestWithUser) {
+    return this.userService.remove(req.user.id);
   }
 }

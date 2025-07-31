@@ -1,8 +1,8 @@
 // custom-list-movie.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { CreateCustomListMovieDto } from './dto/create-custom-list-movie.dto';
-import { UpdateCustomListMovieDto } from './dto/update-custom-list-movie.dto';
+import { CreateCustomListMovieDto } from './dto/create-custom_list_movie.dto';
+import { UpdateCustomListMovieDto } from './dto/update-custom_list_movie.dto';
 
 @Injectable()
 export class CustomListMovieService {
