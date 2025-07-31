@@ -1,10 +1,12 @@
+// custom-list-movie.module.ts
 import { Module } from '@nestjs/common';
-import { CustomListMoviesService } from './custom_list_movies.service';
-import { CustomListMoviesController } from './custom_list_movies.controller';
-import { PrismaService } from '../prisma/prisma.service';
+import { CustomListMovieController } from './custom_list_movies.controller';
+import { CustomListMovieService } from './custom_list_movies.service';
+import { PrismaClient } from '@prisma/client';
 
 @Module({
-  controllers: [CustomListMoviesController],
-  providers: [CustomListMoviesService, PrismaService],
+  controllers: [CustomListMovieController],
+  providers: [CustomListMovieService, PrismaClient],
+  exports: [CustomListMovieService],
 })
-export class CustomListMoviesModule {}
+export class CustomListMovieModule {}

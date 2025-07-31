@@ -1,26 +1,41 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserMovieDto } from './dto/create-user_movie.dto';
-import { UpdateUserMovieDto } from './dto/update-user_movie.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import { CreateUserMovieDto } from '../dto/create-user-movie.dto';
+import { UpdateUserMovieDto } from '../dto/update-user-movie.dto';
 
 @Injectable()
-export class UserMoviesService {
-  create(createUserMovieDto: CreateUserMovieDto) {
-    return 'This action adds a new userMovie';
+export class UserMovieService {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  async create(createUserMovieDto: CreateUserMovieDto) {
+    return this.prisma.userMovie.create({ data: createUserMovieDto });
   }
 
-  findAll() {
-    return `This action returns all userMovies`;
+  async findAll(userId: number) {
+    return this.prisma.userMovie.findMany({ where: { userId } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} userMovie`;
+  async findOne(id: number, userId: number) {
+    return this.getUserMovie(id, userId);
   }
 
-  update(id: number, updateUserMovieDto: UpdateUserMovieDto) {
-    return `This action updates a #${id} userMovie`;
+  async update(id: number, updateUserMovieDto: UpdateUserMovieDto, userId: number) {
+    await this.getUserMovie(id, userId);
+    return this.prisma.userMovie.update({ where: { id }, data: updateUserMovieDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} userMovie`;
+  async remove(id: number, userId: number) {
+    await this.getUserMovie(id, userId);
+    return this.prisma.userMovie.delete({ where: { id } });
+  }
+
+  private async getUserMovie(id: number, userId: number) {
+    const userMovie = await this.prisma.userMovie.findFirst({
+      where: { id, userId },
+    });
+    if (!userMovie) {
+      throw new NotFoundException(`UserMovie with id ${id} not found`);
+    }
+    return userMovie;
   }
 }

@@ -1,9 +1,12 @@
+// user-movie.module.ts
 import { Module } from '@nestjs/common';
-import { UserMoviesService } from './user_movies.service';
-import { UserMoviesController } from './user_movies.controller';
+import { UserMovieController } from './user_movies.controller';
+import { UserMovieService } from './user_movies.service';
+import { PrismaClient } from '@prisma/client';
 
 @Module({
-  controllers: [UserMoviesController],
-  providers: [UserMoviesService],
+  controllers: [UserMovieController],
+  providers: [UserMovieService, PrismaClient],
+  exports: [UserMovieService],
 })
-export class UserMoviesModule {}
+export class UserMovieModule {}

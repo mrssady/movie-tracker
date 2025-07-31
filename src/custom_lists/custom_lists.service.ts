@@ -1,26 +1,34 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCustomListDto } from './dto/create-custom_list.dto';
-import { UpdateCustomListDto } from './dto/update-custom_list.dto';
+// custom-list.service.ts
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import { CreateCustomListDto } from './dto/create-custom-list.dto';
+import { UpdateCustomListDto } from './dto/update-custom-list.dto.ts';
 
 @Injectable()
-export class CustomListsService {
-  create(createCustomListDto: CreateCustomListDto) {
-    return 'This action adds a new customList';
+export class CustomListService {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  async create(createCustomListDto: CreateCustomListDto) {
+    return this.prisma.customList.create({ data: createCustomListDto });
   }
 
-  findAll() {
-    return `This action returns all customLists`;
+  async findAll(userId: number) {
+    return this.prisma.customList.findMany({ where: { userId } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} customList`;
+  async findOne(id: number, userId: number) {
+    const list = await this.prisma.customList.findFirst({ where: { id, userId } });
+    if (!list) throw new NotFoundException(`CustomList with id ${id} not found`);
+    return list;
   }
 
-  update(id: number, updateCustomListDto: UpdateCustomListDto) {
-    return `This action updates a #${id} customList`;
+  async update(id: number, updateCustomListDto: UpdateCustomListDto, userId: number) {
+    await this.findOne(id, userId);
+    return this.prisma.customList.update({ where: { id }, data: updateCustomListDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} customList`;
+  async remove(id: number, userId: number) {
+    await this.findOne(id, userId);
+    return this.prisma.customList.delete({ where: { id } });
   }
 }

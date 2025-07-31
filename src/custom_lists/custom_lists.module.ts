@@ -1,9 +1,12 @@
+// custom-list.module.ts
 import { Module } from '@nestjs/common';
-import { CustomListsService } from './custom_lists.service';
-import { CustomListsController } from './custom_lists.controller';
+import { CustomListController } from './custom_lists.controller';
+import { CustomListService } from './custom_lists.service';
+import { PrismaClient } from '@prisma/client';
 
 @Module({
-  controllers: [CustomListsController],
-  providers: [CustomListsService],
+  controllers: [CustomListController],
+  providers: [CustomListService, PrismaClient],
+  exports: [CustomListService],
 })
-export class CustomListsModule {}
+export class CustomListModule {}

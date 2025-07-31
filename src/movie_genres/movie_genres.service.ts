@@ -1,26 +1,34 @@
-import { Injectable } from '@nestjs/common';
+// movie-genre.service.ts
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 import { CreateMovieGenreDto } from './dto/create-movie_genre.dto';
 import { UpdateMovieGenreDto } from './dto/update-movie_genre.dto';
 
 @Injectable()
-export class MovieGenresService {
-  create(createMovieGenreDto: CreateMovieGenreDto) {
-    return 'This action adds a new movieGenre';
+export class MovieGenreService {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  async create(createMovieGenreDto: CreateMovieGenreDto) {
+    return this.prisma.movieGenre.create({ data: createMovieGenreDto });
   }
 
-  findAll() {
-    return `This action returns all movieGenres`;
+  async findAll() {
+    return this.prisma.movieGenre.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} movieGenre`;
+  async findOne(id: number) {
+    const movieGenre = await this.prisma.movieGenre.findUnique({ where: { id } });
+    if (!movieGenre) throw new NotFoundException(`MovieGenre with id ${id} not found`);
+    return movieGenre;
   }
 
-  update(id: number, updateMovieGenreDto: UpdateMovieGenreDto) {
-    return `This action updates a #${id} movieGenre`;
+  async update(id: number, updateMovieGenreDto: UpdateMovieGenreDto) {
+    await this.findOne(id);
+    return this.prisma.movieGenre.update({ where: { id }, data: updateMovieGenreDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} movieGenre`;
+  async remove(id: number) {
+    await this.findOne(id);
+    return this.prisma.movieGenre.delete({ where: { id } });
   }
 }

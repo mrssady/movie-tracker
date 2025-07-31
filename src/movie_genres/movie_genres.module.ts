@@ -1,9 +1,12 @@
+// movie-genre.module.ts
 import { Module } from '@nestjs/common';
-import { MovieGenresService } from './movie_genres.service';
-import { MovieGenresController } from './movie_genres.controller';
+import { MovieGenreController } from './movie_genres.controller';
+import { MovieGenreService } from './movie_genres.service';
+import { PrismaClient } from '@prisma/client';
 
 @Module({
-  controllers: [MovieGenresController],
-  providers: [MovieGenresService],
+  controllers: [MovieGenreController],
+  providers: [MovieGenreService, PrismaClient],
+  exports: [MovieGenreService],
 })
-export class MovieGenresModule {}
+export class MovieGenreModule {}

@@ -1,26 +1,34 @@
-import { Injectable } from '@nestjs/common';
+// watch-status.service.ts
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 import { CreateWatchStatusDto } from './dto/create-watch_status.dto';
 import { UpdateWatchStatusDto } from './dto/update-watch_status.dto';
 
 @Injectable()
-export class WatchStatusesService {
-  create(createWatchStatusDto: CreateWatchStatusDto) {
-    return 'This action adds a new watchStatus';
+export class WatchStatusService {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  async create(createWatchStatusDto: CreateWatchStatusDto) {
+    return this.prisma.watchStatus.create({ data: createWatchStatusDto });
   }
 
-  findAll() {
-    return `This action returns all watchStatuses`;
+  async findAll() {
+    return this.prisma.watchStatus.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} watchStatus`;
+  async findOne(id: number) {
+    const status = await this.prisma.watchStatus.findUnique({ where: { id } });
+    if (!status) throw new NotFoundException(`WatchStatus with id ${id} not found`);
+    return status;
   }
 
-  update(id: number, updateWatchStatusDto: UpdateWatchStatusDto) {
-    return `This action updates a #${id} watchStatus`;
+  async update(id: number, updateWatchStatusDto: UpdateWatchStatusDto) {
+    await this.findOne(id);
+    return this.prisma.watchStatus.update({ where: { id }, data: updateWatchStatusDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} watchStatus`;
+  async remove(id: number) {
+    await this.findOne(id);
+    return this.prisma.watchStatus.delete({ where: { id } });
   }
 }

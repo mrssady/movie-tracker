@@ -1,35 +1,20 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
-    @IsNotEmpty()
-    name: string;
-    
-    @IsString()
-    @IsNotEmpty()
-    email: string;
-    
-    @IsString()
-    @IsNotEmpty()
-    password: string;
+  @IsNotEmpty()
+  name: string;
 
-    @IsString()
-    @IsNotEmpty()
-    avatarUrl?: string;
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
 
-    @IsString()
-    @IsNotEmpty()
-    createdAt: Date;
+  @IsString()
+  @IsNotEmpty()
+  password: string;
 
-    @IsString()
-    @IsNotEmpty()
-    updatedAt: Date;
-
-    @IsString()
-    @IsNotEmpty()
-    userMovies: UserMovie[];
-
-    @IsString()
-    @IsNotEmpty()
-    customLists: CustomList[];
+  @IsString()
+  @IsOptional()
+  avatarUrl?: string;
+  
 }

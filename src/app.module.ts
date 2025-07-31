@@ -11,6 +11,7 @@ import { CustomList } from './custom_lists/entities/custom_list.entity';
 import { CustomListMovie } from './custom_list_movies/entities/custom_list_movie.entity';
 import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { PrismaModule } from './prisma/prisma.module';
     CustomList,
     CustomListMovie,
     PrismaModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
